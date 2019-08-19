@@ -1,17 +1,17 @@
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Game {
 
+    Scanner scanner;
     String answer;
+    String guess;
 
-    public void start(InputStream in, OutputStream out){
+    public Game(){
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void start(){
         /*
-
         1. System generate a random number
         2. User input a guess number
         3. System check the guess number against the answer
@@ -19,11 +19,45 @@ public class Game {
         5. repeat steps 2-4 until 4A4B.
          */
 
+        displayWelcomeMessage();
+
         answer = generateRandomFourNumbers();
+
+        do {
+            guess = promptForUserGuess();
+
+            if (!isFourDigits(guess)) {
+                System.out.println(guess + " is not in numeric format or incorrect length.");
+            }else{
+                int countA = correctNumberAndPosition(guess, answer);
+                int countB = correctNumberCount(guess, answer);
+
+                System.out.println(countA + "A" + countB + "B");
+            }
+        }while(!hasGuessCorrectly());
+
+        displayWinningMessage();
 
     }
 
-    public boolean isNumber(String data){
+    public boolean hasGuessCorrectly(){
+        return guess.equals(answer);
+    }
+
+    public void displayWinningMessage() {
+        System.out.println("You won!");
+    }
+
+    public void displayWelcomeMessage() {
+        System.out.println("Welcome!");
+    }
+
+    public String promptForUserGuess() {
+        System.out.println("Enter four digits guess: ");
+        return scanner.nextLine();
+    }
+
+    public boolean isFourDigits(String data){
         try {
             Integer.parseInt(data);
             return data.length() == 4;
