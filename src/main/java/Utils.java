@@ -1,5 +1,7 @@
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Utils {
 
@@ -26,5 +28,15 @@ public class Utils {
         }
 
         return result;
+    }
+
+    public boolean isUniqueChars(String data){
+        Set<Character> buckets = new HashSet<>();
+
+        for( char d: data.toCharArray()){
+            buckets.add(d);
+        }
+
+        return buckets.size() == data.length();
     }
 }

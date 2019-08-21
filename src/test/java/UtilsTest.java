@@ -37,15 +37,6 @@ public class UtilsTest {
 
         assertEquals(data.length(), 4);
 
-        Set<Character> buckets = new HashSet<>();
-
-        for( char d: data.toCharArray()){
-            buckets.add(d);
-        }
-
-        System.out.println(data);
-
-        assertEquals(buckets.size(), 4);
-
+        assertTrue(utils.isUniqueChars(data));
     }
 }

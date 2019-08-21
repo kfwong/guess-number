@@ -2,10 +2,6 @@ import org.junit.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.HashSet;
-import java.util.Set;
-
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.*;
 import static org.mockito.Mockito.*;
 
@@ -89,7 +85,21 @@ public class GameTest {
 
         game.start();
 
-        assertEquals("abcd is not in numeric format or incorrect length.", out.toString().trim());
+        assertEquals("abcd is not in numeric format, incorrect length or has repeated digits.", out.toString().trim());
+    }
+
+    @Test
+    public void should_fail_for_non_unique_input() {
+
+        doNothing().when(game).displayWelcomeMessage();
+        doNothing().when(game).displayWinningMessage();
+
+        doReturn("1111").when(game).promptForUserGuess();
+        doReturn(true).when(game).hasGuessCorrectly();
+
+        game.start();
+
+        assertEquals("1111 is not in numeric format, incorrect length or has repeated digits.", out.toString().trim());
     }
 
     @Test

@@ -34,8 +34,8 @@ public class Game {
         do {
             guess = promptForUserGuess();
 
-            if (!utils.isFourDigits(guess)) {
-                System.out.println(guess + " is not in numeric format or incorrect length.");
+            if (!utils.isFourDigits(guess) || !utils.isUniqueChars(guess)) {
+                System.out.println(guess + " is not in numeric format, incorrect length or has repeated digits.");
             }else{
                 int countA = correctNumberAndPosition(guess, answer);
                 int countB = correctNumberCount(guess, answer);
