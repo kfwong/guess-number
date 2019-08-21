@@ -9,16 +9,18 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.*;
 import static org.mockito.Mockito.*;
 
-public class MainTest {
+public class GameTest {
 
     static Game game;
+    static Utils utils;
     static ByteArrayOutputStream out;
     static PrintStream ps;
     static PrintStream stdout;
 
     @BeforeClass
     public static void setup(){
-        game = spy(new Game());
+        utils = spy(new Utils());
+        game = spy(new Game(utils));
         stdout = System.out;
     }
 
@@ -33,27 +35,9 @@ public class MainTest {
     public void afterEach() {
         System.setOut(stdout);
         reset(game);
+        reset(utils);
     }
 
-    @Test
-    public void must_be_four_numbers(){
-        String[] data = {"1234", "0284"};
-
-        for( String d : data){
-            boolean isNumber = game.isFourDigits(d);
-            assertTrue(isNumber);
-        }
-    }
-
-    @Test
-    public void should_fail_if_invalid_numbers() {
-        String[] data = {"abcd", ";[];", "12367923659"};
-
-        for( String d : data){
-            boolean isNumber = game.isFourDigits(d);
-            assertFalse(isNumber);
-        }
-    }
 
     @Test
     public void should_have_one_digit_is_correct_number(){
@@ -64,24 +48,6 @@ public class MainTest {
 
 
         assertEquals(correctNumberCount, 1);
-    }
-
-    @Test
-    public void should_return_four_digits_that_is_not_repeated(){
-        String data = game.generateRandomFourNumbers();
-
-        assertEquals(data.length(), 4);
-
-        Set<Character> buckets = new HashSet<>();
-
-        for( char d: data.toCharArray()){
-            buckets.add(d);
-        }
-
-        System.out.println(data);
-
-        assertEquals(buckets.size(), 4);
-
     }
 
     @Test
@@ -132,7 +98,7 @@ public class MainTest {
         doNothing().when(game).displayWelcomeMessage();
         doNothing().when(game).displayWinningMessage();
 
-        doReturn("2345").when(game).generateRandomFourNumbers();
+        doReturn("2345").when(utils).generateRandomFourNumbers();
         doReturn("1234").when(game).promptForUserGuess();
         doReturn(true).when(game).hasGuessCorrectly();
 
@@ -145,12 +111,12 @@ public class MainTest {
     public void should_win_the_game_when_guess_correctly(){
         doNothing().when(game).displayWelcomeMessage();
 
-        doReturn("1234").when(game).generateRandomFourNumbers();
+        doReturn("1234").when(utils).generateRandomFourNumbers();
         doReturn("1234").when(game).promptForUserGuess();
 
         game.start();
 
-        verify(game.hasGuessCorrectly());
+        assertTrue(game.hasGuessCorrectly());
 
         assertEquals("4A4B\nYou won!", out.toString().trim());
     }

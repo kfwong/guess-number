@@ -1,13 +1,21 @@
 import java.util.*;
 
+
 public class Game {
 
     Scanner scanner;
     String answer;
     String guess;
 
+    Utils utils;
+
     public Game(){
+        this(new Utils());
         this.scanner = new Scanner(System.in);
+    }
+
+    public Game(Utils utils){
+        this.utils = utils;
     }
 
     public void start(){
@@ -21,12 +29,12 @@ public class Game {
 
         displayWelcomeMessage();
 
-        answer = generateRandomFourNumbers();
+        answer = utils.generateRandomFourNumbers();
 
         do {
             guess = promptForUserGuess();
 
-            if (!isFourDigits(guess)) {
+            if (!utils.isFourDigits(guess)) {
                 System.out.println(guess + " is not in numeric format or incorrect length.");
             }else{
                 int countA = correctNumberAndPosition(guess, answer);
@@ -57,15 +65,6 @@ public class Game {
         return scanner.nextLine();
     }
 
-    public boolean isFourDigits(String data){
-        try {
-            Integer.parseInt(data);
-            return data.length() == 4;
-        }catch(Exception e){
-            return false;
-        }
-    }
-
     public int correctNumberCount(String data, String answer){
         int count = 0;
 
@@ -78,22 +77,6 @@ public class Game {
         }
 
         return count;
-    }
-
-    public String generateRandomFourNumbers() {
-        String result = "";
-        int[] numbers = {0,1,2,3,4,5,6,7,8,9};
-        Random random = new Random();
-
-        for(int i =0; i < 4; i++ ){
-            final int randomlyPickedNumber = numbers[random.nextInt(numbers.length)];
-            numbers = Arrays.stream(numbers)
-                        .filter( number -> number != randomlyPickedNumber)
-                        .toArray();
-            result += randomlyPickedNumber;
-        }
-
-        return result;
     }
 
     public int correctNumberAndPosition(String guess, String answer) {
